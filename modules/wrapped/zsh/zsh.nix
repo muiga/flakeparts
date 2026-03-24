@@ -1,7 +1,7 @@
 { inputs, ... }:
 {
   perSystem =
-    { pkgs, config, ... }:
+    { pkgs, ... }:
     let
       myAliases = {
         upgrade = "cd ~/nixosflake && sudo nix flake update && cd && sudo nixos-rebuild switch --flake ~/nixosflake";
@@ -20,14 +20,6 @@
         logout = "loginctl terminate-user $USER";
         dev = "tmux new-session \\; split-window -h \\; split-window -v \\; select-pane -t 0";
       };
-
-      # Define your color variables
-      fg = "#d8dee9";
-      bg = "#2e3440";
-      purple = "#b48ead";
-      bg_highlight = "#3b4252";
-      blue = "#81a1c1";
-      cyan = "#88c0d0";
     in
     {
       packages.myZsh = inputs.wrapper-modules.wrappers.zsh.wrap {
@@ -37,7 +29,6 @@
           autosuggestion.enable = true;
           syntaxHighlighting.enable = true;
           enableCompletion = true;
-          dotDir = "${config.xdg.configHome}/zsh";
           shellAliases = myAliases;
 
           initContent = ''
@@ -54,7 +45,7 @@
             purple="#B388FF"
             blue="#06BCE4"
             cyan="#2CF9ED"
-            export FZF_DEFAULT_OPTS="--color=fg:${fg},bg:${bg},hl:${purple},fg+:${fg},bg+:${bg_highlight},hl+:${purple},info:${blue},prompt:${cyan},pointer:${cyan},marker:${cyan},spinner:${cyan},header:${cyan}"
+            export FZF_DEFAULT_OPTS="--color=fg:$fg,bg:$bg,hl:$purple,fg+:$fg,bg+:$bg_highlight,hl+:$purple,info:$blue,prompt:$cyan,pointer:$cyan,marker:$cyan,spinner:$cyan,header:$cyan"
 
             # -- Use fd instead of fzf --
             export PATH=$PATH:${pkgs.fd}/bin

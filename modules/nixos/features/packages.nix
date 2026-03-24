@@ -1,0 +1,92 @@
+{ ... }:
+{
+  flake.nixosModules.packages =
+    { pkgs, ... }:
+    {
+      environment.systemPackages = with pkgs; [
+        epson-escpr2
+        ffmpegthumbnailer
+        openssl
+        fwupd
+        sbctl
+        niv
+        android-tools
+        polkit
+        syncthing
+        gitRepo
+        fastfetch
+        wget
+        curl
+        git
+        oh-my-posh
+        stow
+        fzf
+        zoxide
+        fzf-git-sh
+        eza
+        delta
+        bat
+        tldr
+        fd
+        efibootmgr
+        usbutils
+        fprintd
+        libfprint
+        vlc
+        brave
+        mkcert
+        inkscape-with-extensions
+        haruna
+        motrix
+        nodejs_20
+        htop
+        ferdium
+        libreoffice-fresh
+        pdfarranger
+        ffmpeg
+        yt-dlp
+        libva
+        libva-utils
+        mpv
+        strawberry
+        bottom
+        appimage-run
+        bruno
+        vscode.fhs
+        joplin-desktop
+        gimp3-with-plugins
+        slack
+        google-chrome
+        jq
+        cloudflare-warp
+        cloudflared
+        docker-compose
+        gnome-tweaks
+        thunderbird
+        birdtray
+        ngrok
+        bitwarden-desktop
+        anydesk
+        libusb1
+        ghostscript
+        musicpod
+        pnpm
+        winbox
+        tmux
+        localsend
+        kitty
+        kdePackages.konsole
+        obs-studio
+        megasync
+        mailspring
+        eog
+        zed-editor-fhs
+        nil
+        nixd
+        fluent-reader
+        newsflash
+      ];
+
+      environment.shells = with pkgs; [ zsh ];
+    };
+}
