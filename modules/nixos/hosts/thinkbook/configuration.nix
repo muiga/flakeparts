@@ -2,7 +2,7 @@
 {
 
   flake.nixosModules.thinkbookConfiguration =
-    { ... }:
+    { config, pkgs, ... }:
     {
       # import any other modules from here
       imports = [
