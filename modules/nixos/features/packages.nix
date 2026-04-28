@@ -48,24 +48,18 @@
         libva
         libva-utils
         mpv
-        strawberry
         bottom
         appimage-run
         bruno
         vscode.fhs
         joplin-desktop
         gimp3-with-plugins
-        slack
         google-chrome
         jq
-        cloudflare-warp
-        cloudflared
-        docker-compose
-        gnome-tweaks
-        thunderbird
-        birdtray
-        ngrok
-        bitwarden-desktop
+        #cloudflare-warp
+        #cloudflared
+        docker-compose        
+        #ngrok
         anydesk
         libusb1
         ghostscript
@@ -75,16 +69,14 @@
         tmux
         localsend
         kitty
-        kdePackages.konsole
+        #kdePackages.konsole
         obs-studio
-        megasync
+        #megasync
         mailspring
         eog
         zed-editor-fhs
         nil
-        nixd
-        fluent-reader
-        newsflash
+        nixd        
       ];
 
       environment.shells = with pkgs; [ zsh ];
