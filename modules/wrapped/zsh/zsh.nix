@@ -65,7 +65,7 @@
             fd --type=d --hidden --exclude .git . "$1"
           }
           # fzf-git-sh
-          source ${pkgs.fzf-git-sh}/share/fzf-git.sh
+          source ${pkgs.fzf-git-sh}/share/fzf-git-sh/fzf-git.sh
           # Preview functions
           show_file_or_dir_preview="if [ -d {} ]; then eza --tree --color=always {} | head -200; else bat -n --color=always --line-range :500 {}; fi"
           export FZF_CTRL_T_OPTS="--preview '$show_file_or_dir_preview'"
