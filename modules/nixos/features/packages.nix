@@ -18,16 +18,7 @@
         wget
         curl
         git
-        oh-my-posh
-        stow
-        fzf
-        zoxide
-        fzf-git-sh
-        eza
-        delta
-        bat
-        tldr
-        fd
+        stow   
         efibootmgr
         usbutils
         fprintd
@@ -58,7 +49,7 @@
         jq
         #cloudflare-warp
         #cloudflared
-        docker-compose        
+        docker-compose
         #ngrok
         anydesk
         libusb1
@@ -69,14 +60,14 @@
         tmux
         localsend
         kitty
-        #kdePackages.konsole
         obs-studio
         #megasync
         mailspring
         eog
         zed-editor-fhs
         nil
-        nixd        
+        nixd
+        pywalfox-native
       ];
 
       environment.shells = with pkgs; [ zsh ];

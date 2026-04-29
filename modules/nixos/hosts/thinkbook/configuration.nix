@@ -18,6 +18,7 @@
         self.nixosModules.storage
         self.nixosModules.virtualisation
         self.nixosModules.niri
+        self.nixosModules.zsh
       ];
 
       networking.hostName = "thinkbook"; # Define your hostname.
@@ -54,13 +55,14 @@
         extraGroups = [
           "networkmanager"
           "wheel"
+          "docker"
+          "tailscale"
         ];
-
+        shell = pkgs.zsh;
       };
 
       # Install firefox.
       programs.firefox.enable = true;
-
     };
 
 }
