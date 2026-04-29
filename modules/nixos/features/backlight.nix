@@ -11,21 +11,33 @@
         set -euo pipefail
 
         TIMEOUT=${toString inactivityTimeout}
-        ACTIVE=1
-        LAST_ACTIVITY=$(date +%s)
+
+        STATE_FILE=$(mktemp /tmp/kbd-backlight-state.XXXXXX)
+        TIME_FILE=$(mktemp /tmp/kbd-backlight-time.XXXXXX)
+        echo "1" > "$STATE_FILE"
+        date +%s > "$TIME_FILE"
+
+        cleanup() {
+          echo "Cleaning up..."
+          kill "''${WATCHDOG_PID:-}" 2>/dev/null || true
+          kill "''${EVTEST_PIDS[@]:-}" 2>/dev/null || true
+          rm -f "$STATE_FILE" "$TIME_FILE" "$FIFO"
+          exit 0
+        }
+        trap cleanup EXIT INT TERM
 
         turn_on() {
-          if [ "$ACTIVE" -eq 0 ]; then
-            ACTIVE=1
-            ${pkgs.brightnessctl}/bin/brightnessctl -d platform::kbd_backlight set 50
+          if [ "$(cat "$STATE_FILE")" -eq 0 ]; then
+            echo "1" > "$STATE_FILE"
+            ${pkgs.brightnessctl}/bin/brightnessctl -d platform::kbd_backlight set 100% -q
             echo "Backlight ON"
           fi
         }
 
         turn_off() {
-          if [ "$ACTIVE" -eq 1 ]; then
-            ACTIVE=0
-            ${pkgs.brightnessctl}/bin/brightnessctl -d platform::kbd_backlight set 0
+          if [ "$(cat "$STATE_FILE")" -eq 1 ]; then
+            echo "0" > "$STATE_FILE"
+            ${pkgs.brightnessctl}/bin/brightnessctl -d platform::kbd_backlight set 0 -q
             echo "Backlight OFF"
           fi
         }
@@ -41,30 +53,42 @@
 
         watchdog() {
           while true; do
+            sleep 5
+            LAST=$(cat "$TIME_FILE")
             NOW=$(date +%s)
-            ELAPSED=$(( NOW - LAST_ACTIVITY ))
+            ELAPSED=$(( NOW - LAST ))
             if [ "$ELAPSED" -ge "$TIMEOUT" ]; then
               turn_off
             fi
-            sleep 5
           done
         }
 
-        watchdog &
-        WATCHDOG_PID=$!
-        trap "kill $WATCHDOG_PID 2>/dev/null; exit 0" EXIT INT TERM
+        mapfile -t DEVICES < <(get_devices)
 
-        DEVICES=$(get_devices)
-        if [ -z "$DEVICES" ]; then
+        if [ "''${#DEVICES[@]}" -eq 0 ]; then
           echo "No input devices found, exiting"
           exit 1
         fi
 
-        echo "Monitoring devices: $DEVICES"
+        echo "Monitoring ''${#DEVICES[@]} devices:"
+        printf '  %s\n' "''${DEVICES[@]}"
 
-        ${pkgs.evtest}/bin/evtest $DEVICES 2>/dev/null | while IFS= read -r line; do
+        FIFO=$(mktemp -u /tmp/kbd-backlight-fifo.XXXXXX)
+        mkfifo "$FIFO"
+
+        EVTEST_PIDS=()
+        for dev in "''${DEVICES[@]}"; do
+          ${pkgs.evtest}/bin/evtest "$dev" >> "$FIFO" 2>/dev/null &
+          EVTEST_PIDS+=($!)
+          echo "Watching $dev (pid $!)"
+        done
+
+        watchdog &
+        WATCHDOG_PID=$!
+
+        while IFS= read -r line < "$FIFO"; do
           if echo "$line" | grep -q "EV_KEY\|EV_REL\|EV_ABS"; then
-            LAST_ACTIVITY=$(date +%s)
+            date +%s > "$TIME_FILE"
             turn_on
           fi
         done
@@ -78,23 +102,20 @@
         pkgs.gawk
       ];
 
-      # evtest needs /dev/input access
       services.udev.extraRules = ''
         KERNEL=="event*", SUBSYSTEM=="input", GROUP="input", MODE="0660"
       '';
 
       systemd.services.kbd-backlight-watch = {
         description = "Turn off keyboard backlight on inactivity";
-        wantedBy = [ "multi-user.target" ]; # starts at boot
-        after = [ "systemd-udevd.service" ]; # wait for input devices
+        wantedBy = [ "multi-user.target" ];
+        after = [ "systemd-udevd.service" ];
 
         serviceConfig = {
           ExecStart = "${backlightScript}";
           Restart = "always";
           RestartSec = "5s";
-          # Run as root so it can access /dev/input and brightnessctl
           User = "root";
-          # Logging
           StandardOutput = "journal";
           StandardError = "journal";
           SyslogIdentifier = "kbd-backlight";
