@@ -18,7 +18,7 @@
         wget
         curl
         git
-        stow   
+        stow
         efibootmgr
         usbutils
         fprintd
@@ -26,6 +26,7 @@
         vlc
         brave
         mkcert
+        nssTools
         inkscape-with-extensions
         haruna
         motrix

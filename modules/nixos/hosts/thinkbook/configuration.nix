@@ -63,6 +63,11 @@
 
       # Install firefox.
       programs.firefox.enable = true;
+
+      security.pki.certificateFiles = [
+        /home/muiga/.local/share/mkcert/rootCA.pem
+      ];
+
     };
 
 }
