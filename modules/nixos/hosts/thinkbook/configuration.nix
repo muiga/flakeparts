@@ -21,6 +21,7 @@
         self.nixosModules.zsh
         self.nixosModules.backlight
         self.nixosModules.flatpak
+        self.nixosModules.zen-browser
       ];
 
       networking.hostName = "thinkbook"; # Define your hostname.
@@ -59,6 +60,8 @@
           "wheel"
           "docker"
           "tailscale"
+          "video"
+          "render"
         ];
         shell = pkgs.zsh;
       };

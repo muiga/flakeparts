@@ -1,55 +1,55 @@
 { inputs, ... }:
 {
-  perSystem =
+  flake.nixosModules.zen-browser =
     { pkgs, ... }:
-    {
-      packages.myZenBrowser = inputs.wrapper-modules.wrappers.zen-browser.wrap {
-        inherit pkgs;
-        settings = {
-          enable = true;
+    let
+      system = pkgs.stdenv.hostPlatform.system;
 
-          policies = {
-            AutofillAddressEnabled = true;
-            AutofillCreditCardEnabled = false;
-            DisableAppUpdate = true;
-            DisableFeedbackCommands = true;
-            DisableFirefoxStudies = true;
-            DisablePocket = true;
-            DisableTelemetry = true;
-            DontCheckDefaultBrowser = true;
-            NoDefaultBookmarks = true;
-            OfferToSaveLogins = false;
+      mkLatestExtension = slug: {
+        install_url = "https://addons.mozilla.org/en-US/firefox/downloads/latest/${slug}/latest.xpi";
+        installation_mode = "force_installed";
+      };
 
-            EnableTrackingProtection = {
-              Value = true;
-              Locked = true;
-              Cryptomining = true;
-              Fingerprinting = true;
-            };
+      lockedPref = value: {
+        Value = value;
+        Status = "locked";
+      };
 
-            ExtensionSettings = {
-              "wappalyzer@crunchlabz.com" = {
-                install_url = "https://addons.mozilla.org/firefox/downloads/file/4482384/wappalyzer-6.10.83.xpi";
-                installation_mode = "force_installed";
-              };
-              "{85860b32-02a8-431a-b2b1-40fbd64c9c69}" = {
-                install_url = "https://addons.mozilla.org/firefox/downloads/file/4156831/github_file_icons-1.5.1.xpi";
-                installation_mode = "force_installed";
-              };
-            };
+      zen-browser = inputs.zen-browser.packages.${system}.beta-unwrapped.override {
+        icon = "zen-browser"; # matches what the "default"/"beta" package normally sets
+        policies = {
+          AutofillAddressEnabled = true;
+          AutofillCreditCardEnabled = false;
+          DisableAppUpdate = true;
+          DisableFeedbackCommands = true;
+          DisableFirefoxStudies = true;
+          DisablePocket = true;
+          DisableTelemetry = true;
+          DontCheckDefaultBrowser = true;
+          NoDefaultBookmarks = true;
+          OfferToSaveLogins = false;
 
-            Preferences =
-              let
-                locked = value: {
-                  "Value" = value;
-                  "Status" = "locked";
-                };
-              in
-              {
-                "browser.tabs.warnOnClose" = locked false;
-              };
+          EnableTrackingProtection = {
+            Value = true;
+            Locked = true;
+            Cryptomining = true;
+            Fingerprinting = true;
+          };
+
+          ExtensionSettings = {
+            "uBlock0@raymondhill.net" = mkLatestExtension "ublock-origin";
+            "{6AC85730-7D0F-4de0-B3FA-21142DD85326}" = mkLatestExtension "colorzilla";
+            "{446900e4-71c2-419f-a6a7-df9c091e268b}" = mkLatestExtension "bitwarden-password-manager";
+            "{85860b32-02a8-431a-b2b1-40fbd64c9c69}" = mkLatestExtension "github-file-icons";
+          };
+
+          Preferences = {
+            "browser.tabs.warnOnClose" = lockedPref false;
           };
         };
       };
+    in
+    {
+      environment.systemPackages = [ zen-browser ];
     };
 }

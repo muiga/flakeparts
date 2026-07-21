@@ -30,7 +30,7 @@
         inkscape-with-extensions
         haruna
         motrix
-        nodejs_20
+        nodejs
         htop
         ferdium
         libreoffice-fresh
@@ -61,9 +61,8 @@
         tmux
         localsend
         kitty
-        obs-studio
         #megasync
-        mailspring
+        # mailspring
         eog
         zed-editor-fhs
         nil
@@ -71,8 +70,18 @@
         pywalfox-native
         cloudflare-warp
         anydesk
-        rustdesk
+        lm_sensors
+        blueman
+        btop
+        kdePackages.kruler
       ];
+
+      programs.obs-studio = {
+        enable = true;
+        plugins = with pkgs.obs-studio-plugins; [
+          obs-vaapi
+        ];
+      };
 
       environment.shells = with pkgs; [ zsh ];
     };

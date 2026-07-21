@@ -4,50 +4,43 @@
     { pkgs, ... }:
     {
       hardware = {
+
         bluetooth = {
           enable = true;
           powerOnBoot = true;
           settings = {
             General = {
-              Enable = "Source,Sink,Media,Socket";
+              # Enable = "Source,Sink,Media,Socket";
               FastConnectable = true;
               MultiProfile = "multiple";
               Experimental = true;
-              ControllerMode = "dual";
+              # ControllerMode = "dual";
             };
           };
         };
         graphics = {
           enable = true;
+          enable32Bit = true;
           extraPackages = with pkgs; [
+            amdvlk
+            rocm-opencl-icd
+            mesa
             libva-vdpau-driver
             libvdpau-va-gl
           ];
-          enable32Bit = true;
         };
       };
 
+      # programs.light.enable = true; # alternative
+
       services.udev.packages = with pkgs; [
         libusb1
-        brightnessctl
       ];
       services.fprintd.enable = true;
       services.fwupd.enable = true;
       services.tuned.enable = true;
       services.upower.enable = true;
       # services.blueman.enable = true;
-      #
-      systemd.user.services.mpris-proxy = {
-        description = "Mpris proxy";
-        after = [
-          "network.target"
-          "sound.target"
-        ];
-        wantedBy = [ "default.target" ];
-        serviceConfig = {
-          Type = "simple";
-          ExecStart = "${pkgs.bluez}/bin/mpris-proxy";
-        };
-      };
+
     };
 }

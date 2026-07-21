@@ -11,12 +11,10 @@
         xwayland-satellite
         quickshell
         brightnessctl
-        #xdg-desktop-portal-gnome
-        #xdg-desktop-portal-gtk
-        #xdg-desktop-portal
         gpu-screen-recorder
         cliphist
         noctalia-shell
+        wl-clipboard
       ];
 
       services.tuned.enable = true;
