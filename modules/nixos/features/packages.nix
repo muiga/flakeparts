@@ -30,7 +30,7 @@
         inkscape-with-extensions
         haruna
         motrix
-        nodejs
+        # nodejs
         htop
         ferdium
         libreoffice-fresh
@@ -62,7 +62,7 @@
         localsend
         kitty
         #megasync
-        # mailspring
+        #mailspring
         eog
         zed-editor-fhs
         nil

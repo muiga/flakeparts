@@ -22,6 +22,7 @@
         self.nixosModules.backlight
         self.nixosModules.flatpak
         self.nixosModules.zen-browser
+        self.nixosModules.mynode
       ];
 
       networking.hostName = "thinkbook"; # Define your hostname.
