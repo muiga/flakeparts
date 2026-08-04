@@ -13,7 +13,7 @@
             repo = "PixelFlasher";
             rev = "v${version}";
             # Leave this empty first; Nix will throw an error and give you the correct hash to paste here
-            hash = "";
+            hash = "sha256-SAo6od26CULyoxufSpMbkLPm+qx+XNak3irQLep5Ubw=";
           };
         }))
       ];
