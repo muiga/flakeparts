@@ -2,7 +2,7 @@
 {
 
   flake.nixosModules.thinkbookConfiguration =
-    { pkgs, ... }:
+    { ... }:
     {
       # import any other modules from here
       imports = [
@@ -24,55 +24,23 @@
         self.nixosModules.zen-browser
         self.nixosModules.mynode
         self.nixosModules.pixelFlasher
+        self.nixosModules.users
+        self.nixosModules.services
+        self.nixosModules.power
+        self.nixosModules.auth
+        self.nixosModules.bluetooth
+        self.nixosModules.hardwareEnable
+        self.nixosModules.programs
+
       ];
 
       networking.hostName = "thinkbook"; # Define your hostname.
-
       # Set your time zone.
       time.timeZone = "Africa/Nairobi";
-
       # Select internationalisation properties.
       i18n.defaultLocale = "en_US.UTF-8";
+      i18n.extraLocaleSettings.LC_TIME = "en_GB.UTF-8"; # 24h clock, if you prefer it
 
-      # Enable the X11 windowing system.
-      # services.xserver.enable = true;
-
-      # Enable the GNOME Desktop Environment.
-      services.displayManager.gdm.enable = true;
-      #services.displayManager.gdm.settings = {
-      #security.AllowRoot = false;
-      #};
-      services.desktopManager.gnome.enable = true;
-
-      # Configure keymap in X11
-      services.xserver.xkb = {
-        layout = "us";
-        variant = "";
-      };
-
-      # Enable touchpad support (enabled default in most desktopManager).
-      # services.xserver.libinput.enable = true;
-
-      # Define a user account. Don't forget to set a password with ‘passwd’.
-      users.users.muiga = {
-        isNormalUser = true;
-        description = "muiga";
-        extraGroups = [
-          "networkmanager"
-          "wheel"
-          "docker"
-          "tailscale"
-          "video"
-          "render"
-        ];
-        shell = pkgs.zsh;
-      };
-
-      # Install firefox.
-      programs.firefox.enable = true;
-      services.cloudflare-warp = {
-        enable = true;
-      };
       security.pki.certificateFiles = [
         ./certs/rootCA.pem
       ];

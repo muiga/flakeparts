@@ -3,15 +3,11 @@
   flake.nixosModules.virtualisation =
     { ... }:
     {
-      virtualisation = {
-        podman = {
+      virtualisation.docker = {
+        enable = true;
+        autoPrune = {
           enable = true;
-          defaultNetwork.settings.dns_enabled = true;
-          defaultNetwork.settings.dns = "8.8.8.8";
-        };
-        docker = {
-          enable = true;
-          autoPrune.enable = true;
+          dates = "weekly";
         };
       };
     };

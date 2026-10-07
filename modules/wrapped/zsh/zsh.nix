@@ -5,13 +5,11 @@
     let
       myAliases = {
         rebuild = "sudo nixos-rebuild switch --flake ~/flakeparts";
-        upgrade = "cd ~/flakeparts && sudo nix flake update && cd && sudo nixos-rebuild switch --flake ~/flakeparts";
+        upgrade = "nix flake update --flake ~/flakeparts && sudo nixos-rebuild switch --flake ~/flakeparts";
         clean-home = "nix-collect-garbage -d";
         clean-system = "sudo nix-collect-garbage -d && sudo /run/current-system/bin/switch-to-configuration boot";
         connect-contabo-mine = "ssh root@45.159.222.167";
-        # biome-init = "npm i -D -E @biomejs/biome && cat $BIOME_CONFIG > biome.json";
         ls = "eza --icons=always";
-        cd = "z";
         dev = "tmux new-session \\; split-window -h \\; split-window -v \\; select-pane -t 0";
       };
       # FZF theme
@@ -76,14 +74,14 @@
             local command=$1
             shift
             case "$command" in
-              cd)           fzf --preview 'eza --tree --color=always \{} | head -200' "$@" ;;
-              export|unset) fzf --preview "eval 'echo $\{}'"         "$@" ;;
-              ssh)          fzf --preview 'dig \{}'                   "$@" ;;
+              cd)           fzf --preview 'eza --tree --color=always {} | head -200' "$@" ;;
+              export|unset) fzf --preview "eval 'echo \$'{}" "$@" ;;
+              ssh)          fzf --preview 'dig {}' "$@" ;;
               *)            fzf --preview "$show_file_or_dir_preview" "$@" ;;
             esac
           }
           # Zoxide (better cd)
-          eval "$(zoxide init zsh)"
+          eval "$(zoxide init zsh --cmd cd)"
         '';
       };
     };

@@ -1,34 +1,28 @@
 { ... }:
 {
   flake.nixosModules.networking =
-    { pkgs, ... }:
+    { ... }:
     {
       networking = {
-        networkmanager.enable = true;
+        networkmanager = {
+          enable = true;
+          dns = "systemd-resolved";
+        };
         nameservers = [
           "1.1.1.1"
           "1.0.0.1"
         ];
-        wireguard.enable = true;
         firewall = {
           enable = true;
+          checkReversePath = "loose";
           trustedInterfaces = [ "tailscale0" ];
           allowedTCPPorts = [
             80
             443
-            5432
             53317
-          ];
-          allowedUDPPorts = [
-            41641
-            53317
-            5353
-          ];
+          ]; # 5432 removed
+          allowedUDPPorts = [ 53317 ]; # 41641 handled by openFirewall
           allowedTCPPortRanges = [
-            {
-              from = 1714;
-              to = 1716;
-            }
             {
               from = 50000;
               to = 51000;
@@ -44,10 +38,6 @@
               to = 8010;
             }
             {
-              from = 1714;
-              to = 1716;
-            }
-            {
               from = 50000;
               to = 51000;
             }
@@ -55,11 +45,15 @@
         };
       };
 
-      #systemd.packages = [ pkgs.cloudflare-warp ];
-      #systemd.targets.multi-user.wants = [ "warp-svc.service" ];
+      services.resolved = {
+        enable = true;
+        settings.Resolve.MulticastDNS = "no";
+      };
 
       services.tailscale = {
         enable = true;
+        openFirewall = true;
+        useRoutingFeatures = "client";
         extraSetFlags = [ "--operator=muiga" ];
       };
     };

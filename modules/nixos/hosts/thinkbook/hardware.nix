@@ -9,8 +9,6 @@
     }:
     {
       boot.kernelPackages = pkgs.linuxPackages_latest;
-      # Video drivers
-      boot.initrd.kernelModules = [ "amdgpu" ];
       boot.initrd.availableKernelModules = [
         "nvme"
         "xhci_pci"
@@ -20,20 +18,11 @@
         "sd_mod"
         "rtsx_pci_sdmmc"
       ];
-      # boot.initrd.kernelModules = [ "dm-snapshot" ];
       boot.kernelModules = [ "kvm-amd" ];
-      boot.extraModulePackages = [ ];
-      # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
-      # (the default) this is the recommended approach. When using systemd-networkd it's
-      # still possible to use this option, but it's recommended to use it in conjunction
-      # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
-      networking.useDHCP = lib.mkDefault true;
-      # networking.interfaces.eno1.useDHCP = lib.mkDefault true;
-      # networking.interfaces.wlp4s0.useDHCP = lib.mkDefault true;
-      #  enable proprietary firmware
+      hardware.amdgpu.initrd.enable = true; # replaces boot.initrd.kernelModules = [ "amdgpu" ]
+      networking.useDHCP = lib.mkDefault false; # NetworkManager handles DHCP
       hardware.enableRedistributableFirmware = lib.mkDefault true;
-      nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
       hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+      nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
     };
-
 }

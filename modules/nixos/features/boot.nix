@@ -7,14 +7,12 @@
         loader = {
           systemd-boot = {
             enable = true;
-            configurationLimit = 3;
+            configurationLimit = 5;
           };
           efi.canTouchEfiVariables = true;
-          timeout = 1;
+          timeout = 3;
         };
-        kernel.sysctl = {
-          "swappiness" = 10;
-        };
+        kernel.sysctl."vm.swappiness" = 10;
       };
 
       systemd.settings.Manager.DefaultTimeoutStopSec = "30s";
