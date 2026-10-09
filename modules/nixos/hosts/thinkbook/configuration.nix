@@ -31,7 +31,7 @@
         self.nixosModules.bluetooth
         self.nixosModules.hardwareEnable
         self.nixosModules.programs
-
+        self.nixosModules.sddmWallpaper
       ];
 
       networking.hostName = "thinkbook"; # Define your hostname.

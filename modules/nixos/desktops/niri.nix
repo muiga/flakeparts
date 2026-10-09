@@ -2,26 +2,38 @@
 {
   flake.nixosModules.niri =
     { pkgs, ... }:
-    {
-      programs.niri = {
-        enable = true;
+    let
+      astronaut = pkgs.sddm-astronaut.override {
+        embeddedTheme = "astronaut";
+        themeConfig.Background = "/var/lib/sddm-wallpaper/current";
       };
+    in
+    {
+      programs.niri.enable = true;
 
       environment.systemPackages = with pkgs; [
         xwayland-satellite
-        quickshell
+        noctalia-shell
         brightnessctl
         gpu-screen-recorder
         cliphist
-        noctalia-shell
         wl-clipboard
+        bibata-cursors
+        astronaut
       ];
 
-      # Login manager
-      services.displayManager.sddm.enable = true;
-      services.displayManager.sddm.wayland.enable = true;
+      services.displayManager.sddm = {
+        enable = true;
+        wayland.enable = true;
+        package = pkgs.kdePackages.sddm;
+        theme = "sddm-astronaut-theme";
+        extraPackages = with pkgs.kdePackages; [
+          qtmultimedia
+          qtsvg
+          qtvirtualkeyboard
+        ];
+      };
 
-      # Portals: file pickers, screen sharing, dark-mode setting
       xdg.portal = {
         enable = true;
         extraPortals = [
@@ -34,9 +46,10 @@
         ];
       };
 
-      # Electron/Chromium apps run natively on Wayland
-      environment.sessionVariables.NIXOS_OZONE_WL = "1";
-
+      environment.sessionVariables = {
+        NIXOS_OZONE_WL = "1";
+        XCURSOR_THEME = "Bibata-Modern-Classic";
+        XCURSOR_SIZE = "18";
+      };
     };
-
 }
