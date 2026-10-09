@@ -1,8 +1,12 @@
 { config, pkgs, ... }:
+let
+  niriDir = "${config.home.homeDirectory}/flakeparts/modules/nixos/desktops/niri";
+in
 {
-  home.stateVersion = "25.11";
+  home.stateVersion = "26.05";
 
   home.pointerCursor = {
+    enable = true;
     name = "Bibata-Modern-Classic";
     package = pkgs.bibata-cursors;
     size = 18;
@@ -32,9 +36,9 @@
 
   # Niri config, edited in the repo and reloaded by niri without a rebuild
   xdg.configFile."niri/config.kdl".source =
-    config.lib.file.mkOutOfStoreSymlink "/home/muiga/flakeparts/modules/niri/config.kdl";
+    config.lib.file.mkOutOfStoreSymlink "${niriDir}/config.kdl";
   xdg.configFile."niri/noctalia.kdl".source =
-    config.lib.file.mkOutOfStoreSymlink "/home/muiga/flakeparts/modules/niri/noctalia.kdl";
+    config.lib.file.mkOutOfStoreSymlink "${niriDir}/noctalia.kdl";
 
   # Standard folders (Pictures, Downloads, ...)
   xdg.userDirs = {

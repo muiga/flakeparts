@@ -11,6 +11,15 @@
       security.pam.services.login.enableGnomeKeyring = true;
 
       programs.seahorse.enable = true; # GUI to manage keys and passwords
+      # programs.ssh.extraConfig = ''
+      #   Host github.com
+      #     HostName github.com
+      #     User git
+      #     AddressFamily inet
+      #     ControlMaster auto
+      #     ControlPath ~/.ssh/cm-%r@%h:%p
+      #     ControlPersist 10m
+      # '';
 
       systemd.user.services.polkit-gnome-agent = {
         description = "polkit-gnome authentication agent";

@@ -8,7 +8,7 @@
       home-manager = {
         useGlobalPkgs = true;
         useUserPackages = true;
-        backupFileExtension = "bak"; # stops "file already exists" errors on first run
+        backupFileExtension = "bak";
         users.muiga = import ./_home.nix;
       };
     };

@@ -41,10 +41,13 @@
           pkgs.xdg-desktop-portal-gnome
           pkgs.xdg-desktop-portal-gtk
         ];
-        config.niri.default = [
-          "gnome"
-          "gtk"
-        ];
+        config.niri = {
+          default = [
+            "gnome"
+            "gtk"
+          ];
+          "org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
+        };
       };
 
       environment.sessionVariables = {
