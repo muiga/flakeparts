@@ -5,7 +5,7 @@
     let
       astronaut = pkgs.sddm-astronaut.override {
         embeddedTheme = "astronaut";
-        themeConfig.Background = "/var/lib/sddm-wallpaper/current";
+        themeConfig.Background = "/var/lib/sddm-wallpaper/current.jpg";
       };
     in
     {
@@ -27,10 +27,11 @@
         wayland.enable = true;
         package = pkgs.kdePackages.sddm;
         theme = "sddm-astronaut-theme";
-        extraPackages = with pkgs.kdePackages; [
-          qtmultimedia
-          qtsvg
-          qtvirtualkeyboard
+        extraPackages = [
+          astronaut
+          pkgs.kdePackages.qtmultimedia
+          pkgs.kdePackages.qtsvg
+          pkgs.kdePackages.qtvirtualkeyboard
         ];
       };
 
