@@ -33,6 +33,7 @@
         self.nixosModules.programs
         self.nixosModules.sddmWallpaper
         self.nixosModules.homeManager
+        self.nixosModules.vite-plus
       ];
 
       networking.hostName = "thinkbook"; # Define your hostname.

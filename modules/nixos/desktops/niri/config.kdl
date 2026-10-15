@@ -88,9 +88,10 @@ output "eDP-1" {
     position x=0 y=0
 }
 
-workspace "top"
-workspace "main"
-
+workspace "one"
+workspace "two"
+workspace "three"
+workspace "scratch"
 
 layout {
     gaps 5
@@ -160,7 +161,7 @@ window-rule {
 window-rule {
     match app-id="zen-twilight" title="^Zen Twilight"
     open-maximized true
-    open-on-workspace "top"
+    open-on-workspace "one"
 }
 
 window-rule {
@@ -450,6 +451,16 @@ binds {
     // Powers off the monitors. To turn them back on, do any input like
     // moving the mouse or pressing any other key.
     Mod+Shift+P { power-off-monitors; }
+
+    // "Minimize": send the focused window to scratch without following it
+    Mod+M { move-window-to-workspace "scratch" focus=false; }
+
+    // Look at what's parked
+    Mod+Shift+M { focus-workspace "scratch"; }
+
+    // Bring the focused window back to the workspace you came from
+    // Mod+Ctrl+M { move-window-to-workspace-previous; }
+
 
     // custom
     Mod+B hotkey-overlay-title="Show Bluetooth Panel" { spawn "noctalia-shell" "ipc" "call" "bluetooth" "togglePanel"; }

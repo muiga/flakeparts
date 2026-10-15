@@ -54,6 +54,7 @@
         lm_sensors
         btop
         kdePackages.kruler
+        super-productivity
       ];
 
     };
